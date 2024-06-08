@@ -21,7 +21,7 @@ public class ResponseUtils {
         responseMeta.put(LabelConstant.code, httpStatus.value());
         responseBody.put(LabelConstant.meta, responseMeta);
         responseBody.put(LabelConstant.data, body);
-        if(httpStatus.value() != 200) {
+        if(httpStatus.value() >= 400) {
             responseBody.put(LabelConstant.data,ResponseError((String) body));
         }
         return ResponseEntity.status(httpStatus).body(responseBody);

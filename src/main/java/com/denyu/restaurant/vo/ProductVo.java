@@ -1,9 +1,9 @@
-package com.denyu.restaurant.model;
+package com.denyu.restaurant.vo;
 
 import lombok.Data;
 
 @Data
-public class Product {
+public class ProductVo {
     private String id;
     private String name;
     private String photo_url;

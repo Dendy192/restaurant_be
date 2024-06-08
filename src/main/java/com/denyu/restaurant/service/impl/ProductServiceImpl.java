@@ -2,12 +2,10 @@ package com.denyu.restaurant.service.impl;
 
 import com.denyu.restaurant.dao.model.ProductDao;
 import com.denyu.restaurant.dao.service.ProductServiceDao;
-import com.denyu.restaurant.model.Product;
+import com.denyu.restaurant.vo.ProductVo;
 import com.denyu.restaurant.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,21 +28,21 @@ public class ProductServiceImpl implements ProductService {
     public Map MappingData(List<ProductDao> productsDao) {
         Map result = new HashMap();
         for (ProductDao dao : productsDao) {
-            Product product = new Product();
-            product.setId(String.valueOf(dao.getId()));
-            product.setName(dao.getName());
-            product.setPhoto_url(dao.getPhoto_url());
-            product.setPrice(dao.getPrice());
-            product.setStatus(dao.getStatus().equals("Y"));
+            ProductVo productVo = new ProductVo();
+            productVo.setId(String.valueOf(dao.getId()));
+            productVo.setName(dao.getName());
+            productVo.setPhoto_url(dao.getPhoto_url());
+            productVo.setPrice(dao.getPrice());
+            productVo.setStatus(dao.getStatus().equals("Y"));
 
             if (result.containsKey(dao.getType())) {
-                List<Product> productList = (List<Product>) result.get(dao.getType());
-                productList.add(product);
-                result.put(dao.getType(), productList);
+                List<ProductVo> productVoList = (List<ProductVo>) result.get(dao.getType());
+                productVoList.add(productVo);
+                result.put(dao.getType(), productVoList);
             } else {
-                List<Product> productList = new ArrayList<>();
-                productList.add(product);
-                result.put(dao.getType(), productList);
+                List<ProductVo> productVoList = new ArrayList<>();
+                productVoList.add(productVo);
+                result.put(dao.getType(), productVoList);
             }
         }
         return result;
