@@ -2,12 +2,15 @@ package com.denyu.restaurant.helper.constants;
 
 public class LabelConstant {
     public static String id = "id";
+
+    //order
+    public static String orderCreated = "Order has Created";
     //product
     public static String productNotFound = "Product Not Found";
 
     //user
     public static String userNotFound = "User Not Found";
-    public static String userFound ="User Found";
+    public static String userFound = "User Found";
     public static String name = "name";
     public static String role = "role";
 
