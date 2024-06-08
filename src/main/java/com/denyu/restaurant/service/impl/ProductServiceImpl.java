@@ -7,9 +7,12 @@ import com.denyu.restaurant.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -18,19 +21,33 @@ public class ProductServiceImpl implements ProductService {
     ProductServiceDao productServiceDao;
 
     @Override
-    public List<Product> getProductAll() {
+    public Map getProductAll() {
         List<ProductDao> productsDao = productServiceDao.findAll();
-        List<Product> productsList = new ArrayList<>();
-        for(ProductDao dao : productsDao){
+        Map productsList = MappingData(productsDao);
+        return productsList;
+    }
+
+    public Map MappingData(List<ProductDao> productsDao) {
+        Map result = new HashMap();
+        for (ProductDao dao : productsDao) {
             Product product = new Product();
             product.setId(String.valueOf(dao.getId()));
             product.setName(dao.getName());
             product.setPhoto_url(dao.getPhoto_url());
             product.setPrice(dao.getPrice());
-//            boolean status = dao.getStatus().equals("Y");
             product.setStatus(dao.getStatus().equals("Y"));
-            productsList.add(product);
+
+            if (result.containsKey(dao.getType())) {
+                List<Product> productList = (List<Product>) result.get(dao.getType());
+                productList.add(product);
+                result.put(dao.getType(), productList);
+            } else {
+                List<Product> productList = new ArrayList<>();
+                productList.add(product);
+                result.put(dao.getType(), productList);
+            }
         }
-        return productsList;
+        return result;
     }
+
 }

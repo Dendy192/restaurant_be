@@ -27,4 +27,6 @@ public class ProductDao {
     @Column(name = "product_status")
     private String status;
 
+    @Column(name = "product_type")
+    private String type;
 }
