@@ -33,8 +33,6 @@ public class UserController {
         if(!result){
             if(response.get(LabelConstant.messages) !=null){
                 return ResponseUtils.response(HttpStatus.FOUND, response.get(LabelConstant.messages));
-            }else{
-                return ResponseUtils.response(HttpStatus.FOUND, response.get(LabelConstant.data));
             }
         }
         return ResponseUtils.response(HttpStatus.CREATED, response.get(LabelConstant.data));

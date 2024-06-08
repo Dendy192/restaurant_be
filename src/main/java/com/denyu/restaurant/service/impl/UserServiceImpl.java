@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
             Optional<UserDao> ouser = userServiceDao.findUserDaoByName(vo.getName());
             if (ouser.isEmpty()) {
                 UserDao user = new UserDao();
-                user.setId(generateIdUsingName(vo.getName()).toString());
+//                user.setId(generateIdUsingName(vo.getName()));
                 user.setName(vo.getName());
                 user.setPassword(vo.getPassword());
                 user.setRole(vo.getRole());

@@ -3,7 +3,6 @@ package com.denyu.restaurant.dao.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.UUID;
 
 @Data
 @Entity
@@ -13,7 +12,7 @@ public class ProductDao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "product_id")
-    private UUID id;
+    private String id;
 
     @Column(name = "product_name")
     private String name;

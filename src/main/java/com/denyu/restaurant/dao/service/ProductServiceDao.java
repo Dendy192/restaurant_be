@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ProductServiceDao extends JpaRepository<ProductDao, UUID> {
+public interface ProductServiceDao extends JpaRepository<ProductDao, String> {
     List<ProductDao> findAll(Sort sort);
+
+    ProductDao findProductDaoById(String id);
 
 }

@@ -5,4 +5,6 @@ import java.util.Map;
 public interface ProductService {
 
     Map getProductAll();
+
+
 }

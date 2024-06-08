@@ -3,11 +3,13 @@ package com.denyu.restaurant.dao.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+
 @Data
 @Entity
 @Table(name = "rs_user")
 public class UserDao {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id")
     private String id;
 
