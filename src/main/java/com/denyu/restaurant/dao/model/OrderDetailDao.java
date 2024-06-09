@@ -21,4 +21,6 @@ public class OrderDetailDao {
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private ProductDao product;
 
+    @Column(name = "order_detail_qty")
+    private int qty;
 }

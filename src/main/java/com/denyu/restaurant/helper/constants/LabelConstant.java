@@ -8,6 +8,11 @@ public class LabelConstant {
     //product
     public static String productNotFound = "Product Not Found";
 
+    public static String process = "Process";
+    public static String waitingForPayment = "Waiting For Payment";
+
+    public static String orderNotFound = "Order Not Found";
+
     //user
     public static String userNotFound = "User Not Found";
     public static String userFound = "User Found";

@@ -1,9 +1,12 @@
 package com.denyu.restaurant.service;
 
-import com.denyu.restaurant.vo.ListOrderVo;
+import com.denyu.restaurant.vo.OrderVo;
 
 import java.util.HashMap;
 
 public interface OrderService {
-    HashMap addOrder(ListOrderVo lVo);
+    HashMap addOrder(OrderVo lVo);
+
+    HashMap getOrderToday();
+
 }

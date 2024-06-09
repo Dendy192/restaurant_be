@@ -11,10 +11,11 @@ import com.denyu.restaurant.dao.service.UserServiceDao;
 import com.denyu.restaurant.helper.constants.LabelConstant;
 import com.denyu.restaurant.helper.utils.DateUtils;
 import com.denyu.restaurant.service.OrderService;
-import com.denyu.restaurant.vo.ListOrderVo;
+import com.denyu.restaurant.vo.OrderDetailVo;
 import com.denyu.restaurant.vo.OrderVo;
-import org.hibernate.query.Order;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,37 +37,78 @@ public class OrderServiceImpl implements OrderService {
     OrderDetailServiceDao orderDetailServiceDao;
 
     @Transactional
-    public HashMap addOrder(ListOrderVo lVo) {
+    public HashMap addOrder(OrderVo vo) {
         HashMap result = new HashMap();
         try {
-            Optional<UserDao> OuserDao = userServiceDao.findUserDaoByName(lVo.getName());
+            Optional<UserDao> OuserDao = userServiceDao.findUserDaoByName(vo.getName());
             UserDao userDao = OuserDao.get();
-            List<OrderVo> lOrderVo = lVo.getData();
+            List<OrderDetailVo> lOrderVo = vo.getData();
             List<OrderDetailDao> lOrderDao = new ArrayList<>();
             OrderDao orderDao = new OrderDao();
 
             orderDao.setUserDao(userDao);
-            orderDao.setTable(Integer.parseInt(lVo.getTableNumber()));
-            orderDao.setStatus("Process");
+            orderDao.setTable(Integer.parseInt(vo.getTableNumber()));
+            orderDao.setStatus(LabelConstant.process);
             orderDao.setDateTime(DateUtils.getTimeSql());
             orderServiceDao.save(orderDao);
-            for (OrderVo vo : lOrderVo) {
-                ProductDao productDao = productServiceDao.findProductDaoById(vo.getProductId());
+            for (OrderDetailVo odVo : lOrderVo) {
+                ProductDao productDao = productServiceDao.findProductDaoById(odVo.getProductId());
                 OrderDetailDao orderDetailDao = new OrderDetailDao();
                 orderDetailDao.setProduct(productDao);
                 orderDetailDao.setOrder(orderDao);
+                orderDetailDao.setQty(Integer.parseInt(odVo.getQty()));
                 orderDetailServiceDao.save(orderDetailDao);
                 lOrderDao.add(orderDetailDao);
             }
 
 
             result.put(LabelConstant.result, true);
-            result.put(LabelConstant.data, orderDao);
+            result.put(LabelConstant.data, vo);
         } catch (Exception e) {
             e.printStackTrace();
             result.put(LabelConstant.result, false);
             result.put(LabelConstant.messages, e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    public HashMap getOrderToday() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "status");
+        List<OrderDao> orderDaoList = orderServiceDao.findOrderDaoByDateTimeBetween(DateUtils.toStartOfDay(DateUtils.getTimeSql()), DateUtils.toEndOfDay(DateUtils.getTimeSql()), sort);
+        List<OrderVo> lVo = new ArrayList<>();
+
+        for (OrderDao dao : orderDaoList) {
+            List<OrderDetailDao> odd = orderDetailServiceDao.findOrderDetailDaoByOrder(dao);
+            OrderVo vo = mappingVo(dao, odd);
+            lVo.add(vo);
+        }
+        HashMap result = new HashMap();
+        if (orderDaoList.isEmpty()) {
+            result.put(LabelConstant.result, false);
+            result.put(LabelConstant.messages, LabelConstant.orderNotFound);
+        } else {
+            result.put(LabelConstant.result, true);
+            result.put(LabelConstant.data, lVo);
+        }
+        return result;
+    }
+
+    public OrderVo mappingVo(OrderDao dao, List<OrderDetailDao> odd) {
+        OrderVo vo = new OrderVo();
+        List<OrderDetailVo> orderDetailVoList = new ArrayList<>();
+        for (OrderDetailDao od : odd) {
+            OrderDetailVo odVo = new OrderDetailVo();
+            odVo.setProductId(od.getProduct().getId());
+            odVo.setQty(String.valueOf(od.getQty()));
+            odVo.setPrice(od.getProduct().getPrice());
+            orderDetailVoList.add(odVo);
+        }
+        vo.setStatus(dao.getStatus());
+        vo.setData(orderDetailVoList);
+        vo.setTableNumber(String.valueOf(dao.getTable()));
+        vo.setId(dao.getId());
+        vo.setName(dao.getUserDao().getName());
+        return vo;
     }
 }

@@ -28,8 +28,6 @@ public class OrderDao {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserDao userDao;
 
-//    @OneToMany(mappedBy = "order")
-//    private List<OrderDetailDao> orderDetails;
 
 
 }
