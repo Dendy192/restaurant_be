@@ -7,5 +7,6 @@ public class OrderDetailVo {
     private String productId;
     private String qty;
     private String price;
+    private String notes;
 
 }

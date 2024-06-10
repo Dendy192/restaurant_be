@@ -5,11 +5,12 @@ public class LabelConstant {
 
     //order
     public static String orderCreated = "Order has Created";
+    public static String process = "Process";
+    public static String payment = "Payment";
+    public static String status = "status";
+    public static String tableNumber = "table";
     //product
     public static String productNotFound = "Product Not Found";
-
-    public static String process = "Process";
-    public static String waitingForPayment = "Waiting For Payment";
 
     public static String orderNotFound = "Order Not Found";
 

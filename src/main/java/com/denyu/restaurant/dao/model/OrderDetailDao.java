@@ -23,4 +23,7 @@ public class OrderDetailDao {
 
     @Column(name = "order_detail_qty")
     private int qty;
+
+    @Column(name = "order_detail_notes")
+    private String notes;
 }

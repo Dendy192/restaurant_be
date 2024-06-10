@@ -9,4 +9,6 @@ public interface OrderService {
 
     HashMap getOrderToday();
 
+    HashMap updateOrder(String id,String status);
+
 }

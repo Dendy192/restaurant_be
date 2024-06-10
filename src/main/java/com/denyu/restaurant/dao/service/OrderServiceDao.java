@@ -12,4 +12,5 @@ import java.util.UUID;
 @Repository
 public interface OrderServiceDao extends JpaRepository<OrderDao, String> {
     List<OrderDao> findOrderDaoByDateTimeBetween(Timestamp startDateTime, Timestamp endDateTime, Sort sort);
+    OrderDao findOrderDaoById(String id);
 }

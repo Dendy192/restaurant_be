@@ -57,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailDao.setProduct(productDao);
                 orderDetailDao.setOrder(orderDao);
                 orderDetailDao.setQty(Integer.parseInt(odVo.getQty()));
+                orderDetailDao.setNotes(odVo.getNotes());
                 orderDetailServiceDao.save(orderDetailDao);
                 lOrderDao.add(orderDetailDao);
             }
@@ -94,6 +95,27 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    @Transactional
+    public HashMap updateOrder(String id, String status) {
+        HashMap result = new HashMap();
+        try{
+            OrderDao oDao = orderServiceDao.findOrderDaoById(id);
+            oDao.setStatus(LabelConstant.payment);
+            orderServiceDao.save(oDao);
+            result.put(LabelConstant.result, true);
+            HashMap mappingMessage = new HashMap<>();
+            mappingMessage.put(LabelConstant.id, id);
+            mappingMessage.put(LabelConstant.status, status);
+            mappingMessage.put(LabelConstant.tableNumber, oDao.getTable());
+            result.put(LabelConstant.data, mappingMessage);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.put(LabelConstant.result, false);
+            result.put(LabelConstant.messages, e.getMessage());
+        }
+        return result;
+    }
+
     public OrderVo mappingVo(OrderDao dao, List<OrderDetailDao> odd) {
         OrderVo vo = new OrderVo();
         List<OrderDetailVo> orderDetailVoList = new ArrayList<>();
@@ -102,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
             odVo.setProductId(od.getProduct().getId());
             odVo.setQty(String.valueOf(od.getQty()));
             odVo.setPrice(od.getProduct().getPrice());
+            odVo.setNotes(od.getNotes());
             orderDetailVoList.add(odVo);
         }
         vo.setStatus(dao.getStatus());

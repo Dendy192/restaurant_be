@@ -22,8 +22,7 @@ public class OrderController {
     @RequestMapping(value = "/addOrder", method = RequestMethod.POST)
     public ResponseEntity<?> AddOrder(@RequestBody OrderVo vo) {
         HashMap result = orderService.addOrder(vo);
-        boolean rs = (boolean) result.get(LabelConstant.result);
-        if (!rs) {
+        if (!checkResult((boolean) result.get(LabelConstant.result))) {
             return ResponseUtils.response(HttpStatus.BAD_REQUEST, result.get(LabelConstant.messages));
         }
         Map msg = new HashMap();
@@ -31,13 +30,25 @@ public class OrderController {
         return ResponseUtils.response(HttpStatus.CREATED, msg);
     }
 
+    @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
+    public ResponseEntity<?> updateOrder(@RequestBody OrderVo vo) {
+        HashMap result = orderService.updateOrder(vo.getId(),vo.getStatus());
+        if (!checkResult((boolean) result.get(LabelConstant.result))) {
+            return ResponseUtils.response(HttpStatus.BAD_REQUEST, result.get(LabelConstant.messages));
+        }
+        return ResponseUtils.response(HttpStatus.OK, result.get(LabelConstant.data));
+    }
+
     @RequestMapping(value = "/getOrderToday")
     public ResponseEntity<?> getOrderToday() {
         HashMap result = orderService.getOrderToday();
-        boolean rs = (boolean) result.get(LabelConstant.result);
-        if(!rs){
+        if(!checkResult((boolean) result.get(LabelConstant.result))){
             return ResponseUtils.response(HttpStatus.NOT_FOUND, result.get(LabelConstant.messages));
         }
         return ResponseUtils.response(HttpStatus.FOUND, result.get(LabelConstant.data));
+    }
+
+    private boolean checkResult(boolean result){
+        return result;
     }
 }
